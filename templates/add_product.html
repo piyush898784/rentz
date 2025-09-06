@@ -1,0 +1,358 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Product - Rentz{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-card">
+        <div class="form-header">
+            <div class="form-icon">
+                <i class="fas fa-plus-circle"></i>
+            </div>
+            <h2>List Your Product</h2>
+            <p>Add a new product to start earning from rentals</p>
+        </div>
+        
+        <form method="post" enctype="multipart/form-data" class="product-form" id="productForm">
+            {% csrf_token %}
+            
+            <!-- Display form errors -->
+            {% if form.errors %}
+                <div class="form-errors">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                {{ field|title }}: {{ error }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <!-- Product Name -->
+            <div class="form-group">
+                <label for="{{ form.name.id_for_label }}" class="form-label">
+                    <i class="fas fa-tag"></i> Product Name
+                </label>
+                <div class="input-wrapper">
+                    {{ form.name }}
+                </div>
+                <div class="form-help">Enter a clear, descriptive name for your product</div>
+            </div>
+            
+            <!-- Category -->
+            <div class="form-group">
+                <label for="{{ form.category.id_for_label }}" class="form-label">
+                    <i class="fas fa-list"></i> Category
+                </label>
+                <div class="input-wrapper">
+                    {{ form.category }}
+                </div>
+                <div class="form-help">Select the category that best describes your product</div>
+            </div>
+            
+            <!-- Description -->
+            <div class="form-group">
+                <label for="{{ form.description.id_for_label }}" class="form-label">
+                    <i class="fas fa-align-left"></i> Description
+                </label>
+                <div class="input-wrapper">
+                    {{ form.description }}
+                </div>
+                <div class="form-help">Provide detailed information about your product's features and condition</div>
+            </div>
+            
+            <!-- Price and Availability Row -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.price_per_day.id_for_label }}" class="form-label">
+                        <i class="fas fa-rupee-sign"></i> Price per Day (₹)
+                    </label>
+                    <div class="input-wrapper">
+                        <div class="price-input">
+                            <span class="currency-symbol">₹</span>
+                            {{ form.price_per_day }}
+                        </div>
+                    </div>
+                    <div class="form-help">Set a competitive daily rental price</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.availability.id_for_label }}" class="form-label">
+                        <i class="fas fa-check-circle"></i> Availability
+                    </label>
+                    <div class="input-wrapper">
+                        {{ form.availability }}
+                    </div>
+                    <div class="form-help">Current status of your product</div>
+                </div>
+            </div>
+            
+            <!-- Image Upload -->
+            <div class="form-group">
+                <label for="{{ form.image.id_for_label }}" class="form-label">
+                    <i class="fas fa-camera"></i> Product Image
+                </label>
+                <div class="image-upload-wrapper">
+                    <div class="image-upload-area" id="imageUploadArea">
+                        <div class="upload-content">
+                            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                            <h4>Upload Product Image</h4>
+                            <p>Drag and drop an image here, or click to select</p>
+                            <div class="upload-formats">
+                                <span>PNG, JPG, GIF up to 5MB</span>
+                            </div>
+                        </div>
+                        {{ form.image }}
+                    </div>
+                    
+                    <div class="image-preview" id="imagePreview" style="display: none;">
+                        <img id="previewImage" src="" alt="Preview">
+                        <button type="button" class="remove-image" id="removeImage">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-help">Add a high-quality image to attract more renters</div>
+            </div>
+            
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <a href="{% url 'owner_dashboard' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Cancel
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Add Product
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Tips Section -->
+    <div class="tips-card">
+        <h3><i class="fas fa-lightbulb"></i> Tips for Success</h3>
+        <ul class="tips-list">
+            <li>
+                <i class="fas fa-camera"></i>
+                <div>
+                    <strong>Use High-Quality Images</strong>
+                    <p>Clear, well-lit photos get 3x more inquiries</p>
+                </div>
+            </li>
+            <li>
+                <i class="fas fa-edit"></i>
+                <div>
+                    <strong>Write Detailed Descriptions</strong>
+                    <p>Include condition, features, and any accessories</p>
+                </div>
+            </li>
+            <li>
+                <i class="fas fa-tags"></i>
+                <div>
+                    <strong>Price Competitively</strong>
+                    <p>Research similar products to set the right price</p>
+                </div>
+            </li>
+            <li>
+                <i class="fas fa-clock"></i>
+                <div>
+                    <strong>Keep Information Updated</strong>
+                    <p>Update availability and condition regularly</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Image upload preview functionality
+document.getElementById('{{ form.image.id_for_label }}').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        // Validate file size (5MB max)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('File size must be less than 5MB');
+            this.value = '';
+            return;
+        }
+        
+        // Validate file type
+        const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        if (!validTypes.includes(file.type)) {
+            alert('Please select a valid image file (PNG, JPG, or GIF)');
+            this.value = '';
+            return;
+        }
+        
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('previewImage').src = e.target.result;
+            document.getElementById('imageUploadArea').style.display = 'none';
+            document.getElementById('imagePreview').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Remove image functionality
+document.getElementById('removeImage').addEventListener('click', function() {
+    document.getElementById('{{ form.image.id_for_label }}').value = '';
+    document.getElementById('imageUploadArea').style.display = 'block';
+    document.getElementById('imagePreview').style.display = 'none';
+});
+
+// Drag and drop functionality
+const uploadArea = document.getElementById('imageUploadArea');
+
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    uploadArea.addEventListener(eventName, preventDefaults, false);
+});
+
+function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+['dragenter', 'dragover'].forEach(eventName => {
+    uploadArea.addEventListener(eventName, highlight, false);
+});
+
+['dragleave', 'drop'].forEach(eventName => {
+    uploadArea.addEventListener(eventName, unhighlight, false);
+});
+
+function highlight(e) {
+    uploadArea.classList.add('highlight');
+}
+
+function unhighlight(e) {
+    uploadArea.classList.remove('highlight');
+}
+
+uploadArea.addEventListener('drop', handleDrop, false);
+
+function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    
+    document.getElementById('{{ form.image.id_for_label }}').files = files;
+    
+    // Trigger change event
+    const event = new Event('change', { bubbles: true });
+    document.getElementById('{{ form.image.id_for_label }}').dispatchEvent(event);
+}
+
+// Click to upload
+uploadArea.addEventListener('click', function() {
+    document.getElementById('{{ form.image.id_for_label }}').click();
+});
+
+// Form validation
+document.getElementById('productForm').addEventListener('submit', function(e) {
+    const name = document.getElementById('{{ form.name.id_for_label }}').value.trim();
+    const description = document.getElementById('{{ form.description.id_for_label }}').value.trim();
+    const price = document.getElementById('{{ form.price_per_day.id_for_label }}').value;
+    
+    if (!name) {
+        e.preventDefault();
+        alert('Please enter a product name');
+        document.getElementById('{{ form.name.id_for_label }}').focus();
+        return;
+    }
+    
+    if (!description || description.length < 10) {
+        e.preventDefault();
+        alert('Please provide a detailed description (at least 10 characters)');
+        document.getElementById('{{ form.description.id_for_label }}').focus();
+        return;
+    }
+    
+    if (!price || parseFloat(price) <= 0) {
+        e.preventDefault();
+        alert('Please enter a valid price');
+        document.getElementById('{{ form.price_per_day.id_for_label }}').focus();
+        return;
+    }
+    
+    // Show loading state
+    const submitBtn = document.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding Product...';
+    submitBtn.disabled = true;
+    
+    // Re-enable if there are errors (won't execute if form submits successfully)
+    setTimeout(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }, 3000);
+});
+
+// Character counter for description
+const descriptionField = document.getElementById('{{ form.description.id_for_label }}');
+const maxLength = 500; // Assuming max length
+
+descriptionField.addEventListener('input', function() {
+    const currentLength = this.value.length;
+    const remaining = maxLength - currentLength;
+    
+    let counter = document.querySelector('.description-counter');
+    if (!counter) {
+        counter = document.createElement('div');
+        counter.className = 'description-counter';
+        this.parentElement.appendChild(counter);
+    }
+    
+    counter.textContent = `${currentLength}/${maxLength} characters`;
+    
+    if (remaining < 50) {
+        counter.style.color = '#e74c3c';
+    } else if (remaining < 100) {
+        counter.style.color = '#f39c12';
+    } else {
+        counter.style.color = '#95a5a6';
+    }
+});
+
+// Auto-save draft (localStorage)
+function saveDraft() {
+    const formData = {
+        name: document.getElementById('{{ form.name.id_for_label }}').value,
+        category: document.getElementById('{{ form.category.id_for_label }}').value,
+        description: document.getElementById('{{ form.description.id_for_label }}').value,
+        price: document.getElementById('{{ form.price_per_day.id_for_label }}').value,
+        availability: document.getElementById('{{ form.availability.id_for_label }}').value
+    };
+    
+    localStorage.setItem('product_draft', JSON.stringify(formData));
+}
+
+function loadDraft() {
+    const draft = localStorage.getItem('product_draft');
+    if (draft) {
+        const formData = JSON.parse(draft);
+        Object.keys(formData).forEach(key => {
+            const field = document.getElementById(`{{ form.name.id_for_label }}`.replace('name', key));
+            if (field && formData[key]) {
+                field.value = formData[key];
+            }
+        });
+    }
+}
+
+// Load draft on page load
+document.addEventListener('DOMContentLoaded', loadDraft);
+
+// Save draft every 10 seconds
+setInterval(saveDraft, 10000);
+
+// Clear draft on successful submission
+document.getElementById('productForm').addEventListener('submit', function() {
+    localStorage.removeItem('product_draft');
+});
+</script>
+{% endblock %}

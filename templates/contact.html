@@ -1,0 +1,535 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - Rentz{% endblock %}
+
+{% block content %}
+<!-- Contact Hero Section -->
+<section class="contact-hero">
+    <div class="hero-background">
+        <div class="hero-overlay"></div>
+    </div>
+    
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1 class="hero-title">
+                Get in <span class="brand-highlight">Touch</span>
+            </h1>
+            <p class="hero-subtitle">
+                📞 We're here to help you 24/7
+            </p>
+            <p class="hero-description">
+                Have questions, suggestions, or need support? Our friendly team is always ready to assist you.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Information Section -->
+<section class="contact-info-section">
+    <div class="section-container">
+        <div class="contact-info-grid">
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <div class="contact-details">
+                    <h3>Phone Support</h3>
+                    <p class="contact-main">+91 9876543210</p>
+                    <p class="contact-sub">Available 24/7 for urgent support</p>
+                    <a href="tel:+919876543210" class="contact-action">
+                        <i class="fas fa-phone"></i> Call Now
+                    </a>
+                </div>
+            </div>
+            
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="contact-details">
+                    <h3>Email Support</h3>
+                    <p class="contact-main">support@rentz.com</p>
+                    <p class="contact-sub">We'll respond within 2 hours</p>
+                    <a href="mailto:support@rentz.com" class="contact-action">
+                        <i class="fas fa-envelope"></i> Send Email
+                    </a>
+                </div>
+            </div>
+            
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="contact-details">
+                    <h3>Live Chat</h3>
+                    <p class="contact-main">Instant Support</p>
+                    <p class="contact-sub">Chat with our support agents</p>
+                    <button class="contact-action" onclick="openLiveChat()">
+                        <i class="fas fa-comments"></i> Start Chat
+                    </button>
+                </div>
+            </div>
+            
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div class="contact-details">
+                    <h3>Office Address</h3>
+                    <p class="contact-main">Mumbai, Maharashtra</p>
+                    <p class="contact-sub">India - 400001</p>
+                    <button class="contact-action" onclick="openMap()">
+                        <i class="fas fa-map"></i> View Map
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Form Section -->
+<section class="contact-form-section">
+    <div class="section-container">
+        <div class="contact-form-grid">
+            <!-- Contact Form -->
+            <div class="form-container">
+                <div class="form-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-paper-plane"></i>
+                        Send us a Message
+                    </h2>
+                    <p>Fill out the form below and we'll get back to you as soon as possible.</p>
+                </div>
+                
+                <form method="post" class="contact-form" id="contactForm">
+                    {% csrf_token %}
+                    
+                    <!-- Name Fields -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first_name" class="form-label">
+                                <i class="fas fa-user"></i> First Name
+                            </label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    id="first_name" 
+                                    name="first_name" 
+                                    class="form-input" 
+                                    placeholder="Your first name"
+                                    required
+                                >
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="last_name" class="form-label">
+                                <i class="fas fa-user"></i> Last Name
+                            </label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    id="last_name" 
+                                    name="last_name" 
+                                    class="form-input" 
+                                    placeholder="Your last name"
+                                    required
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Email and Phone -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email" class="form-label">
+                                <i class="fas fa-envelope"></i> Email Address
+                            </label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="email" 
+                                    id="email" 
+                                    name="email" 
+                                    class="form-input" 
+                                    placeholder="your.email@example.com"
+                                    required
+                                >
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone" class="form-label">
+                                <i class="fas fa-phone"></i> Phone Number
+                            </label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="tel" 
+                                    id="phone" 
+                                    name="phone" 
+                                    class="form-input" 
+                                    placeholder="+91 9876543210"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Subject -->
+                    <div class="form-group">
+                        <label for="subject" class="form-label">
+                            <i class="fas fa-tag"></i> Subject
+                        </label>
+                        <div class="input-wrapper">
+                            <select id="subject" name="subject" class="form-select" required>
+                                <option value="">Select a topic</option>
+                                <option value="general">General Inquiry</option>
+                                <option value="support">Technical Support</option>
+                                <option value="billing">Billing & Payments</option>
+                                <option value="partnership">Business Partnership</option>
+                                <option value="feedback">Feedback & Suggestions</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Message -->
+                    <div class="form-group">
+                        <label for="message" class="form-label">
+                            <i class="fas fa-comment-alt"></i> Message
+                        </label>
+                        <div class="input-wrapper">
+                            <textarea 
+                                id="message" 
+                                name="message" 
+                                class="form-textarea" 
+                                rows="5"
+                                placeholder="Tell us how we can help you..."
+                                required
+                            ></textarea>
+                        </div>
+                        <div class="character-count">
+                            <span id="charCount">0</span>/500 characters
+                        </div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary submit-btn">
+                            <i class="fas fa-paper-plane"></i>
+                            Send Message
+                        </button>
+                        <button type="reset" class="btn btn-secondary reset-btn">
+                            <i class="fas fa-undo"></i>
+                            Clear Form
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Contact Info Sidebar -->
+            <div class="contact-sidebar">
+                <div class="sidebar-card">
+                    <h3>
+                        <i class="fas fa-question-circle"></i>
+                        Frequently Asked Questions
+                    </h3>
+                    
+                    <div class="faq-list">
+                        <div class="faq-item">
+                            <h4>How does Rentz work?</h4>
+                            <p>Rentz connects product owners with renters, allowing you to rent items you need or earn money by renting out your products.</p>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <h4>Is it safe to rent through Rentz?</h4>
+                            <p>Yes! All users are verified, payments are secure, and every transaction is covered by our comprehensive insurance policy.</p>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <h4>What if something gets damaged?</h4>
+                            <p>Our insurance policy covers damage to rented items. Simply report the issue and we'll handle the rest.</p>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <h4>How do payments work?</h4>
+                            <p>Payments are processed securely through our platform. Renters pay upfront, and owners receive payment after successful rental completion.</p>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="btn btn-outline">
+                        <i class="fas fa-external-link-alt"></i>
+                        View All FAQs
+                    </a>
+                </div>
+                
+                <div class="sidebar-card">
+                    <h3>
+                        <i class="fas fa-headset"></i>
+                        Support Hours
+                    </h3>
+                    
+                    <div class="support-hours">
+                        <div class="hours-item">
+                            <span class="day">Monday - Friday</span>
+                            <span class="time">9:00 AM - 8:00 PM</span>
+                        </div>
+                        <div class="hours-item">
+                            <span class="day">Saturday</span>
+                            <span class="time">10:00 AM - 6:00 PM</span>
+                        </div>
+                        <div class="hours-item">
+                            <span class="day">Sunday</span>
+                            <span class="time">10:00 AM - 4:00 PM</span>
+                        </div>
+                        <div class="hours-item emergency">
+                            <span class="day">Emergency Support</span>
+                            <span class="time">24/7 Available</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-card">
+                    <h3>
+                        <i class="fas fa-share-alt"></i>
+                        Connect With Us
+                    </h3>
+                    
+                    <div class="social-links">
+                        <a href="#" class="social-link facebook">
+                            <i class="fab fa-facebook-f"></i>
+                            <span>Facebook</span>
+                        </a>
+                        <a href="#" class="social-link twitter">
+                            <i class="fab fa-twitter"></i>
+                            <span>Twitter</span>
+                        </a>
+                        <a href="#" class="social-link instagram">
+                            <i class="fab fa-instagram"></i>
+                            <span>Instagram</span>
+                        </a>
+                        <a href="#" class="social-link linkedin">
+                            <i class="fab fa-linkedin-in"></i>
+                            <span>LinkedIn</span>
+                        </a>
+                    </div>
+                    
+                    <div class="newsletter-signup">
+                        <h4>Stay Updated</h4>
+                        <p>Subscribe to our newsletter for the latest updates and offers.</p>
+                        <div class="newsletter-form">
+                            <input type="email" placeholder="Your email" class="newsletter-input">
+                            <button class="newsletter-btn">
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Map Section (Optional) -->
+<section class="map-section" id="mapSection" style="display: none;">
+    <div class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">Our Location</h2>
+            <p class="section-subtitle">Visit us at our Mumbai office</p>
+        </div>
+        
+        <div class="map-container">
+            <div class="map-placeholder">
+                <i class="fas fa-map"></i>
+                <p>Interactive map would be embedded here</p>
+                <small>Mumbai, Maharashtra, India</small>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Contact form functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const contactForm = document.getElementById('contactForm');
+    const messageTextarea = document.getElementById('message');
+    const charCount = document.getElementById('charCount');
+    
+    // Character counter for message
+    messageTextarea.addEventListener('input', function() {
+        const currentLength = this.value.length;
+        const maxLength = 500;
+        
+        charCount.textContent = currentLength;
+        
+        if (currentLength > maxLength * 0.9) {
+            charCount.style.color = '#ef4444';
+        } else if (currentLength > maxLength * 0.7) {
+            charCount.style.color = '#f59e0b';
+        } else {
+            charCount.style.color = '#6b7280';
+        }
+        
+        if (currentLength > maxLength) {
+            this.value = this.value.substring(0, maxLength);
+            charCount.textContent = maxLength;
+        }
+    });
+    
+    // Form submission
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const submitBtn = this.querySelector('.submit-btn');
+        const originalText = submitBtn.innerHTML;
+        
+        // Show loading state
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        submitBtn.disabled = true;
+        
+        // Simulate form submission (replace with actual AJAX request)
+        setTimeout(() => {
+            // Show success message
+            showNotification('Thank you for your message! We will get back to you within 24 hours.', 'success', 5000);
+            
+            // Reset form
+            contactForm.reset();
+            charCount.textContent = '0';
+            
+            // Reset button
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 2000);
+    });
+    
+    // Reset button functionality
+    document.querySelector('.reset-btn').addEventListener('click', function() {
+        charCount.textContent = '0';
+        charCount.style.color = '#6b7280';
+    });
+    
+    // Auto-fill for logged-in users
+    {% if user.is_authenticated %}
+        document.getElementById('first_name').value = '{{ user.first_name }}';
+        document.getElementById('last_name').value = '{{ user.last_name }}';
+        document.getElementById('email').value = '{{ user.email }}';
+    {% endif %}
+});
+
+// Live chat function
+function openLiveChat() {
+    // In a real application, this would open a chat widget
+    showNotification('Live chat feature coming soon! Please use email or phone for now.', 'info', 3000);
+}
+
+// Map function
+function openMap() {
+    const mapSection = document.getElementById('mapSection');
+    mapSection.style.display = mapSection.style.display === 'none' ? 'block' : 'none';
+    
+    if (mapSection.style.display === 'block') {
+        mapSection.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+// Newsletter signup
+document.querySelector('.newsletter-btn').addEventListener('click', function() {
+    const emailInput = document.querySelector('.newsletter-input');
+    const email = emailInput.value.trim();
+    
+    if (!email) {
+        showNotification('Please enter your email address', 'warning', 3000);
+        return;
+    }
+    
+    if (!isValidEmail(email)) {
+        showNotification('Please enter a valid email address', 'error', 3000);
+        return;
+    }
+    
+    // Show loading
+    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    
+    // Simulate subscription
+    setTimeout(() => {
+        showNotification('Thank you for subscribing to our newsletter!', 'success', 3000);
+        emailInput.value = '';
+        this.innerHTML = '<i class="fas fa-arrow-right"></i>';
+    }, 1000);
+});
+
+// Email validation helper
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+// FAQ accordion functionality
+document.querySelectorAll('.faq-item').forEach(item => {
+    const question = item.querySelector('h4');
+    const answer = item.querySelector('p');
+    
+    question.addEventListener('click', function() {
+        const isOpen = answer.style.display === 'block';
+        
+        // Close all other FAQ items
+        document.querySelectorAll('.faq-item p').forEach(p => {
+            p.style.display = 'none';
+        });
+        
+        // Toggle current item
+        answer.style.display = isOpen ? 'none' : 'block';
+        
+        // Add visual feedback
+        question.style.color = isOpen ? '' : '#6366f1';
+    });
+    
+    // Initially hide answers
+    answer.style.display = 'none';
+    question.style.cursor = 'pointer';
+    question.style.transition = 'color 0.3s ease';
+});
+
+// Smooth scroll for contact cards
+document.querySelectorAll('.contact-action').forEach(action => {
+    if (action.getAttribute('href') && action.getAttribute('href').startsWith('#')) {
+        action.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    }
+});
+
+// Add animation to contact cards on scroll
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver(function(entries) {
+    entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+            setTimeout(() => {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }, index * 100);
+        }
+    });
+}, observerOptions);
+
+// Observe contact cards
+document.querySelectorAll('.contact-card').forEach(card => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(20px)';
+    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(card);
+});
+</script>
+{% endblock %}

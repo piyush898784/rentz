@@ -1,0 +1,446 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us - Rentz{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="about-hero">
+    <div class="hero-background">
+        <div class="hero-overlay"></div>
+    </div>
+    
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1 class="hero-title">
+                About <span class="brand-highlight">Rentz</span>
+            </h1>
+            <p class="hero-subtitle">
+                🏡 Connecting Communities Through Smart Rentals
+            </p>
+            <p class="hero-description">
+                We believe in making quality products accessible to everyone through our innovative rental marketplace platform.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Mission Section -->
+<section class="mission-section">
+    <div class="section-container">
+        <div class="mission-content">
+            <div class="mission-text">
+                <h2 class="section-title">
+                    <i class="fas fa-bullseye"></i>
+                    Our Mission
+                </h2>
+                <p class="mission-description">
+                    At Rentz, we're revolutionizing how people access products they need. Instead of buying expensive items you rarely use, 
+                    why not rent them affordably? We connect product owners with renters, creating a sustainable sharing economy that 
+                    benefits everyone.
+                </p>
+                
+                <div class="mission-points">
+                    <div class="mission-point">
+                        <div class="point-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <div class="point-content">
+                            <h4>Sustainability First</h4>
+                            <p>Reduce waste by maximizing product utilization through sharing</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mission-point">
+                        <div class="point-icon">
+                            <i class="fas fa-rupee-sign"></i>
+                        </div>
+                        <div class="point-content">
+                            <h4>Affordability</h4>
+                            <p>Access high-quality products without the hefty purchase price</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mission-point">
+                        <div class="point-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="point-content">
+                            <h4>Community Building</h4>
+                            <p>Connect neighbors and build stronger local communities</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mission-visual">
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-number">1000+</div>
+                        <div class="stat-label">Active Users</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-boxes"></i>
+                        </div>
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Products Listed</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <div class="stat-number">2500+</div>
+                        <div class="stat-label">Successful Rentals</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stat-number">4.8/5</div>
+                        <div class="stat-label">User Rating</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works-section">
+    <div class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">How Rentz Works</h2>
+            <p class="section-subtitle">Simple, secure, and seamless rental experience</p>
+        </div>
+        
+        <div class="process-timeline">
+            <!-- For Renters -->
+            <div class="timeline-section">
+                <h3 class="timeline-title">
+                    <i class="fas fa-search"></i>
+                    For Renters
+                </h3>
+                
+                <div class="timeline-steps">
+                    <div class="timeline-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Browse Products</h4>
+                            <p>Search through thousands of products available for rent in your area</p>
+                            <div class="step-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Select & Book</h4>
+                            <p>Choose your rental duration and complete the secure booking process</p>
+                            <div class="step-icon">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Pay & Enjoy</h4>
+                            <p>Make secure payment and enjoy your rental for the selected duration</p>
+                            <div class="step-icon">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- For Owners -->
+            <div class="timeline-section">
+                <h3 class="timeline-title">
+                    <i class="fas fa-home"></i>
+                    For Owners
+                </h3>
+                
+                <div class="timeline-steps">
+                    <div class="timeline-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>List Your Product</h4>
+                            <p>Upload photos and details of items you want to rent out</p>
+                            <div class="step-icon">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Get Bookings</h4>
+                            <p>Receive rental requests from verified users in your area</p>
+                            <div class="step-icon">
+                                <i class="fas fa-bell"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Earn Money</h4>
+                            <p>Get paid instantly when your products are rented out</p>
+                            <div class="step-icon">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+    <div class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">Why Choose Rentz?</h2>
+            <p class="section-subtitle">Built with trust, security, and convenience in mind</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Secure & Safe</h3>
+                <p>All users are verified, and every transaction is protected with our comprehensive insurance policy.</p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check"></i> Identity verification</li>
+                    <li><i class="fas fa-check"></i> Secure payments</li>
+                    <li><i class="fas fa-check"></i> Insurance coverage</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3>Available 24/7</h3>
+                <p>Browse, book, and manage your rentals anytime, anywhere with our easy-to-use platform.</p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check"></i> Instant booking</li>
+                    <li><i class="fas fa-check"></i> Real-time updates</li>
+                    <li><i class="fas fa-check"></i> Mobile optimized</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h3>Customer Support</h3>
+                <p>Our dedicated support team is here to help you with any questions or issues you might have.</p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check"></i> 24/7 support chat</li>
+                    <li><i class="fas fa-check"></i> Quick resolution</li>
+                    <li><i class="fas fa-check"></i> Multilingual support</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <h3>Local Community</h3>
+                <p>Connect with your neighbors and contribute to building a stronger, more sustainable local community.</p>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check"></i> Local connections</li>
+                    <li><i class="fas fa-check"></i> Community reviews</li>
+                    <li><i class="fas fa-check"></i> Nearby pickup</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section class="team-section">
+    <div class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">Meet Our Team</h2>
+            <p class="section-subtitle">The passionate people behind Rentz</p>
+        </div>
+        
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="member-avatar">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" alt="Rahul Sharma">
+                </div>
+                <div class="member-info">
+                    <h4>Rahul Sharma</h4>
+                    <p class="member-role">Founder & CEO</p>
+                    <p class="member-description">
+                        Passionate about building sustainable communities and making products accessible to everyone.
+                    </p>
+                    <div class="member-social">
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-member">
+                <div class="member-avatar">
+                    <img src="https://images.unsplash.com/photo-1494790108755-2616c5e90a28?w=200&h=200&fit=crop&crop=face" alt="Priya Patel">
+                </div>
+                <div class="member-info">
+                    <h4>Priya Patel</h4>
+                    <p class="member-role">CTO</p>
+                    <p class="member-description">
+                        Technology enthusiast focused on creating seamless user experiences and robust platforms.
+                    </p>
+                    <div class="member-social">
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-member">
+                <div class="member-avatar">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face" alt="Amit Kumar">
+                </div>
+                <div class="member-info">
+                    <h4>Amit Kumar</h4>
+                    <p class="member-role">Head of Operations</p>
+                    <p class="member-description">
+                        Ensuring smooth operations and building strong relationships with our community of users.
+                    </p>
+                    <div class="member-social">
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="cta-section">
+    <div class="cta-content">
+        <h2>Ready to Join the Rentz Community?</h2>
+        <p>Start renting or earning today with India's most trusted rental marketplace</p>
+        
+        {% if not user.is_authenticated %}
+            <div class="cta-buttons">
+                <a href="{% url 'signup' %}" class="btn btn-primary cta-btn">
+                    <i class="fas fa-user-plus"></i> Sign Up Now
+                </a>
+                <a href="{% url 'contact' %}" class="btn btn-outline cta-btn">
+                    <i class="fas fa-envelope"></i> Contact Us
+                </a>
+            </div>
+        {% else %}
+            <div class="cta-buttons">
+                {% if user.userprofile.user_type == 'owner' %}
+                    <a href="{% url 'owner_dashboard' %}" class="btn btn-primary cta-btn">
+                        <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+                    </a>
+                {% else %}
+                    <a href="{% url 'renter_dashboard' %}" class="btn btn-primary cta-btn">
+                        <i class="fas fa-search"></i> Browse Products
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Animate stats on scroll
+const animateStats = () => {
+    const statNumbers = document.querySelectorAll('.stat-number');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const target = entry.target;
+                const finalValue = target.textContent;
+                const isRating = finalValue.includes('/');
+                
+                if (isRating) {
+                    // Handle rating animation
+                    const rating = parseFloat(finalValue);
+                    animateValue(target, 0, rating, 2000, (val) => `${val.toFixed(1)}/5`);
+                } else {
+                    // Handle number animation
+                    const numericValue = parseInt(finalValue.replace(/[^\d]/g, ''));
+                    const suffix = finalValue.replace(/[\d]/g, '');
+                    animateValue(target, 0, numericValue, 2000, (val) => `${val}${suffix}`);
+                }
+                
+                observer.unobserve(target);
+            }
+        });
+    });
+    
+    statNumbers.forEach(stat => observer.observe(stat));
+};
+
+function animateValue(element, start, end, duration, formatter = (val) => val) {
+    const startTime = performance.now();
+    
+    const animate = (currentTime) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Easing function
+        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+        const currentValue = start + (end - start) * easeOutQuart;
+        
+        element.textContent = formatter(Math.floor(currentValue));
+        
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        } else {
+            element.textContent = formatter(end);
+        }
+    };
+    
+    requestAnimationFrame(animate);
+}
+
+// Initialize animations
+document.addEventListener('DOMContentLoaded', () => {
+    animateStats();
+    
+    // Parallax effect for hero section
+    const hero = document.querySelector('.about-hero');
+    const heroBackground = hero.querySelector('.hero-background');
+    
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const heroHeight = hero.offsetHeight;
+        const scrollPercent = scrolled / heroHeight;
+        
+        if (scrollPercent <= 1) {
+            heroBackground.style.transform = `translateY(${scrolled * 0.5}px)`;
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,333 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sign Up - Rentz{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card signup-card">
+        <div class="auth-header">
+            <div class="auth-icon">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <h2>Join Rentz Today!</h2>
+            <p>Create your account and start renting</p>
+        </div>
+        
+        <form method="post" class="auth-form signup-form">
+            {% csrf_token %}
+            
+            <!-- Display form errors -->
+            {% if form.errors %}
+                <div class="form-errors">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                {% if field == '__all__' %}
+                                    {{ error }}
+                                {% else %}
+                                    {{ field|title }}: {{ error }}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <!-- User Type Selection -->
+            <div class="form-group user-type-section">
+                <label class="form-label">I want to:</label>
+                <div class="user-type-options">
+                    {% for value, label in form.user_type.field.choices %}
+                        <label class="user-type-option">
+                            <input 
+                                type="radio" 
+                                name="user_type" 
+                                value="{{ value }}"
+                                {% if form.user_type.value == value %}checked{% endif %}
+                                required
+                            >
+                            <div class="option-card">
+                                {% if value == 'owner' %}
+                                    <i class="fas fa-home option-icon"></i>
+                                    <h4>Be an Owner</h4>
+                                    <p>Rent out your items and earn money</p>
+                                {% else %}
+                                    <i class="fas fa-search option-icon"></i>
+                                    <h4>Be a Renter</h4>
+                                    <p>Find and rent items you need</p>
+                                {% endif %}
+                            </div>
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Personal Information -->
+            <div class="form-row">
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <i class="fas fa-user input-icon"></i>
+                        {{ form.first_name }}
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <i class="fas fa-user input-icon"></i>
+                        {{ form.last_name }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <i class="fas fa-at input-icon"></i>
+                    {{ form.email }}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <i class="fas fa-user-circle input-icon"></i>
+                    {{ form.username }}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <i class="fas fa-phone input-icon"></i>
+                    {{ form.phone_number }}
+                </div>
+            </div>
+            
+            <!-- Password Fields -->
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    {{ form.password1 }}
+                    <button type="button" class="password-toggle" data-target="id_password1">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <div class="password-strength" id="passwordStrength">
+                    <div class="strength-bar">
+                        <div class="strength-fill"></div>
+                    </div>
+                    <span class="strength-text">Enter password</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    {{ form.password2 }}
+                    <button type="button" class="password-toggle" data-target="id_password2">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Terms and Conditions -->
+            <div class="form-group">
+                <label class="checkbox-wrapper">
+                    <input type="checkbox" name="terms" required>
+                    <span class="checkmark"></span>
+                    I agree to the <a href="#" class="terms-link">Terms of Service</a> 
+                    and <a href="#" class="terms-link">Privacy Policy</a>
+                </label>
+            </div>
+            
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary auth-submit">
+                <i class="fas fa-user-plus"></i>
+                Create Account
+            </button>
+        </form>
+        
+        <!-- Alternative Actions -->
+        <div class="auth-footer">
+            <div class="auth-divider">
+                <span>Already have an account?</span>
+            </div>
+            
+            <a href="{% url 'login' %}" class="btn btn-outline auth-link">
+                <i class="fas fa-sign-in-alt"></i>
+                Sign In
+            </a>
+        </div>
+    </div>
+    
+    <!-- Background Animation -->
+    <div class="auth-background">
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Password visibility toggles
+document.querySelectorAll('.password-toggle').forEach(toggle => {
+    toggle.addEventListener('click', function() {
+        const targetId = this.dataset.target;
+        const passwordInput = document.getElementById(targetId);
+        const icon = this.querySelector('i');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    });
+});
+
+// Password strength indicator
+document.getElementById('id_password1').addEventListener('input', function() {
+    const password = this.value;
+    const strengthBar = document.querySelector('.strength-fill');
+    const strengthText = document.querySelector('.strength-text');
+    
+    let strength = 0;
+    let text = 'Very Weak';
+    let color = '#e74c3c';
+    
+    // Calculate strength
+    if (password.length >= 8) strength++;
+    if (password.match(/[a-z]/)) strength++;
+    if (password.match(/[A-Z]/)) strength++;
+    if (password.match(/[0-9]/)) strength++;
+    if (password.match(/[^a-zA-Z0-9]/)) strength++;
+    
+    // Set strength level
+    switch(strength) {
+        case 0:
+        case 1:
+            text = 'Very Weak';
+            color = '#e74c3c';
+            break;
+        case 2:
+            text = 'Weak';
+            color = '#f39c12';
+            break;
+        case 3:
+            text = 'Medium';
+            color = '#f1c40f';
+            break;
+        case 4:
+            text = 'Strong';
+            color = '#27ae60';
+            break;
+        case 5:
+            text = 'Very Strong';
+            color = '#2ecc71';
+            break;
+    }
+    
+    // Update UI
+    strengthBar.style.width = `${(strength / 5) * 100}%`;
+    strengthBar.style.backgroundColor = color;
+    strengthText.textContent = text;
+    strengthText.style.color = color;
+});
+
+// User type selection animation
+document.querySelectorAll('input[name="user_type"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        document.querySelectorAll('.option-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+        
+        if (this.checked) {
+            this.nextElementSibling.classList.add('selected');
+        }
+    });
+});
+
+// Form submission handling
+document.querySelector('.signup-form').addEventListener('submit', function(e) {
+    const requiredFields = ['first_name', 'last_name', 'email', 'username', 'password1', 'password2'];
+    let hasError = false;
+    
+    // Check required fields
+    requiredFields.forEach(fieldName => {
+        const field = document.querySelector(`[name="${fieldName}"]`);
+        if (!field.value.trim()) {
+            hasError = true;
+            field.classList.add('error');
+        } else {
+            field.classList.remove('error');
+        }
+    });
+    
+    // Check user type selection
+    const userTypeSelected = document.querySelector('input[name="user_type"]:checked');
+    if (!userTypeSelected) {
+        hasError = true;
+        showError('Please select whether you want to be an Owner or Renter');
+    }
+    
+    // Check terms acceptance
+    const termsChecked = document.querySelector('input[name="terms"]:checked');
+    if (!termsChecked) {
+        hasError = true;
+        showError('Please accept the Terms of Service and Privacy Policy');
+    }
+    
+    if (hasError) {
+        e.preventDefault();
+        return;
+    }
+    
+    // Show loading state
+    const submitBtn = document.querySelector('.auth-submit');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+    submitBtn.disabled = true;
+    
+    // Re-enable button after 5 seconds (in case of errors)
+    setTimeout(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }, 5000);
+});
+
+function showError(message) {
+    let errorDiv = document.querySelector('.form-errors');
+    if (!errorDiv) {
+        errorDiv = document.createElement('div');
+        errorDiv.className = 'form-errors';
+        document.querySelector('.signup-form').insertBefore(errorDiv, document.querySelector('.form-group'));
+    }
+    
+    const errorMessage = document.createElement('div');
+    errorMessage.className = 'error-message';
+    errorMessage.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+    errorDiv.appendChild(errorMessage);
+}
+
+// Animation on load
+document.addEventListener('DOMContentLoaded', function() {
+    const authCard = document.querySelector('.auth-card');
+    authCard.style.opacity = '0';
+    authCard.style.transform = 'translateY(30px)';
+    
+    setTimeout(() => {
+        authCard.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        authCard.style.opacity = '1';
+        authCard.style.transform = 'translateY(0)';
+    }, 100);
+});
+</script>
+{% endblock %}

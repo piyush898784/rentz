@@ -1,0 +1,327 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Owner Dashboard - Rentz{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <div class="header-content">
+            <div class="welcome-section">
+                <h1>
+                    <i class="fas fa-tachometer-alt"></i>
+                    Welcome, {{ user.first_name|default:user.username }}!
+                </h1>
+                <p>Manage your rental products and track your earnings</p>
+            </div>
+            
+            <div class="header-actions">
+                <a href="{% url 'add_product' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Add New Product
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-boxes"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-number">{{ total_products }}</div>
+                <div class="stat-label">Total Products</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i> Active listings
+                </div>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon available">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-number">{{ available_products }}</div>
+                <div class="stat-label">Available</div>
+                <div class="stat-change">
+                    Ready to rent
+                </div>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon rented">
+                <i class="fas fa-handshake"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-number">{{ rented_products }}</div>
+                <div class="stat-label">Currently Rented</div>
+                <div class="stat-change">
+                    Generating income
+                </div>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon earnings">
+                <i class="fas fa-rupee-sign"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-number">₹{{ total_earnings }}</div>
+                <div class="stat-label">Total Earnings</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i> All time
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Dashboard Content -->
+    <div class="dashboard-content">
+        <!-- Products Section -->
+        <div class="dashboard-section">
+            <div class="section-header">
+                <h2>
+                    <i class="fas fa-boxes"></i>
+                    Your Products
+                </h2>
+                <div class="section-actions">
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" data-filter="all">
+                            All ({{ total_products }})
+                        </button>
+                        <button class="filter-tab" data-filter="available">
+                            Available ({{ available_products }})
+                        </button>
+                        <button class="filter-tab" data-filter="rented">
+                            Rented ({{ rented_products }})
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            {% if products %}
+                <div class="products-grid">
+                    {% for product in products %}
+                        <div class="product-card owner-product" data-status="{{ product.availability }}">
+                            <div class="product-image">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                                {% else %}
+                                    <div class="product-placeholder">
+                                        <i class="fas fa-image"></i>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="product-status">
+                                    {% if product.availability == 'available' %}
+                                        <span class="status-badge available">
+                                            <i class="fas fa-check-circle"></i> Available
+                                        </span>
+                                    {% elif product.availability == 'rented' %}
+                                        <span class="status-badge rented">
+                                            <i class="fas fa-handshake"></i> Rented
+                                        </span>
+                                    {% else %}
+                                        <span class="status-badge maintenance">
+                                            <i class="fas fa-tools"></i> Maintenance
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="product-info">
+                                <h3 class="product-name">{{ product.name }}</h3>
+                                <p class="product-category">
+                                    <i class="fas fa-tag"></i>
+                                    {{ product.get_category_display }}
+                                </p>
+                                <p class="product-description">
+                                    {{ product.description|truncatewords:15 }}
+                                </p>
+                                
+                                <div class="product-details">
+                                    <div class="product-price">
+                                        <span class="price-amount">₹{{ product.price_per_day }}</span>
+                                        <span class="price-period">/day</span>
+                                    </div>
+                                    
+                                    <div class="product-stats">
+                                        <span class="stat-item">
+                                            <i class="fas fa-calendar"></i>
+                                            {{ product.days_listed }} days listed
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="product-actions">
+                                    <button class="btn btn-sm btn-outline" onclick="editProduct({{ product.id }})">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteProduct({{ product.id }}, '{{ product.name }}')">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-box-open"></i>
+                    </div>
+                    <h3>No Products Listed Yet</h3>
+                    <p>Start earning by listing your first product for rent!</p>
+                    <a href="{% url 'add_product' %}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Your First Product
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Recent Rentals Section -->
+        {% if recent_rentals %}
+        <div class="dashboard-section">
+            <div class="section-header">
+                <h2>
+                    <i class="fas fa-history"></i>
+                    Recent Rentals
+                </h2>
+                <a href="#" class="btn btn-sm btn-outline">View All</a>
+            </div>
+            
+            <div class="rentals-table">
+                <div class="table-header">
+                    <div class="table-row">
+                        <div class="table-cell">Product</div>
+                        <div class="table-cell">Renter</div>
+                        <div class="table-cell">Duration</div>
+                        <div class="table-cell">Amount</div>
+                        <div class="table-cell">Status</div>
+                        <div class="table-cell">Date</div>
+                    </div>
+                </div>
+                
+                <div class="table-body">
+                    {% for rental in recent_rentals %}
+                        <div class="table-row">
+                            <div class="table-cell">
+                                <div class="rental-product">
+                                    {% if rental.product.image %}
+                                        <img src="{{ rental.product.image.url }}" alt="{{ rental.product.name }}">
+                                    {% else %}
+                                        <div class="product-avatar">
+                                            <i class="fas fa-image"></i>
+                                        </div>
+                                    {% endif %}
+                                    <span>{{ rental.product.name }}</span>
+                                </div>
+                            </div>
+                            <div class="table-cell">
+                                <div class="renter-info">
+                                    <i class="fas fa-user"></i>
+                                    <span>{{ rental.renter.first_name|default:rental.renter.username }}</span>
+                                </div>
+                            </div>
+                            <div class="table-cell">
+                                <span>{{ rental.days_rented }} days</span>
+                            </div>
+                            <div class="table-cell">
+                                <span class="amount">₹{{ rental.total_cost }}</span>
+                            </div>
+                            <div class="table-cell">
+                                <span class="status-badge {{ rental.status }}">
+                                    {{ rental.get_status_display }}
+                                </span>
+                            </div>
+                            <div class="table-cell">
+                                <span>{{ rental.created_at|date:"M d, Y" }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Filter functionality
+document.querySelectorAll('.filter-tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+        // Update active tab
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        
+        // Filter products
+        const filter = this.dataset.filter;
+        const products = document.querySelectorAll('.owner-product');
+        
+        products.forEach(product => {
+            if (filter === 'all' || product.dataset.status === filter) {
+                product.style.display = 'block';
+                product.style.animation = 'fadeIn 0.3s ease';
+            } else {
+                product.style.display = 'none';
+            }
+        });
+    });
+});
+
+// Delete product function
+function deleteProduct(productId, productName) {
+    if (confirm(`Are you sure you want to delete "${productName}"? This action cannot be undone.`)) {
+        // Show loading state
+        const deleteBtn = document.querySelector(`button[onclick*="${productId}"]`);
+        const originalText = deleteBtn.innerHTML;
+        deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        deleteBtn.disabled = true;
+        
+        // Send delete request
+        window.location.href = `/delete-product/${productId}/`;
+    }
+}
+
+// Edit product function (placeholder)
+function editProduct(productId) {
+    // In a real app, this would open an edit modal or redirect to edit page
+    alert('Edit functionality will be implemented in the next version!');
+}
+
+// Add animations to stats cards
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.stat-card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+});
+
+// Auto-refresh dashboard every 30 seconds
+setInterval(function() {
+    // In a real app, you might want to fetch updated data via AJAX
+    const now = new Date();
+    console.log(`Dashboard data refreshed at ${now.toLocaleTimeString()}`);
+}, 30000);
+</script>
+
+<style>
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+</style>
+{% endblock %}

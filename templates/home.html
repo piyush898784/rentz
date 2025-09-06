@@ -1,0 +1,327 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Rentz - Rent Anything, Anytime{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-background">
+        <div class="hero-overlay"></div>
+    </div>
+    
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1 class="hero-title">
+                Welcome to <span class="brand-highlight">Rentz</span>
+            </h1>
+            <p class="hero-subtitle">
+                🏡 Your trusted marketplace to rent anything you need
+            </p>
+            <p class="hero-description">
+                From vehicles 🚗 and furniture 🪑 to electronics 📱 and gadgets 🎧 - 
+                find everything for rent at affordable prices!
+            </p>
+            
+            <div class="hero-buttons">
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'signup' %}" class="btn btn-primary hero-btn">
+                        <i class="fas fa-user-plus"></i> Get Started
+                    </a>
+                    <a href="{% url 'login' %}" class="btn btn-secondary hero-btn">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                {% else %}
+                    {% if user.userprofile.user_type == 'owner' %}
+                        <a href="{% url 'owner_dashboard' %}" class="btn btn-primary hero-btn">
+                            <i class="fas fa-tachometer-alt"></i> Owner Dashboard
+                        </a>
+                        <a href="{% url 'add_product' %}" class="btn btn-secondary hero-btn">
+                            <i class="fas fa-plus"></i> Add Product
+                        </a>
+                    {% else %}
+                        <a href="{% url 'renter_dashboard' %}" class="btn btn-primary hero-btn">
+                            <i class="fas fa-search"></i> Browse Products
+                        </a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="hero-stats">
+            <div class="stat-item">
+                <div class="stat-number">{{ total_products }}+</div>
+                <div class="stat-label">Products Available</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Happy Customers</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Support</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="categories-section">
+    <div class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">Browse by Category</h2>
+            <p class="section-subtitle">Find exactly what you need</p>
+        </div>
+        
+        <div class="categories-grid">
+            <div class="category-card" data-category="vehicle">
+                <div class="category-icon">
+                    <i class="fas fa-car"></i>
+                </div>
+                <h3>Vehicles</h3>
+                <p>Cars, bikes, scooters and more</p>
+                <div class="category-overlay">
+                    <span>Explore Vehicles</span>
+                </div>
+            </div>
+            
+            <div class="category-card" data-category="furniture">
+                <div class="category-icon">
+                    <i class="fas fa-couch"></i>
+                </div>
+                <h3>Furniture</h3>
+                <p>Sofas, tables, chairs, beds</p>
+                <div class="category-overlay">
+                    <span>Explore Furniture</span>
+                </div>
+            </div>
+            
+            <div class="category-card" data-category="electronics">
+                <div class="category-icon">
+                    <i class="fas fa-laptop"></i>
+                </div>
+                <h3>Electronics</h3>
+                <p>Laptops, TVs, cameras</p>
+                <div class="category-overlay">
+                    <span>Explore Electronics</span>
+                </div>
+            </div>
+            
+            <div class="category-card" data-category="gadgets">
+                <div class="category-icon">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+                <h3>Gadgets</h3>
+                <p>Gaming, audio, smart devices</p>
+                <div class="category-overlay">
+                    <span>Explore Gadgets</span>
+                </div>
+            </div>
+            
+            <div class="category-card" data-category="sports">
+                <div class="category-icon">
+                    <i class="fas fa-hiking-boot"></i>
+                </div>
+                <h3>Sports & Outdoor</h3>
+                <p>Hiking, camping, sports gear</p>
+                <div class="category-overlay">
+                    <span>Explore Sports</span>
+                </div>
+            </div>
+            
+            <div class="category-card" data-category="books">
+                <div class="category-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h3>Books</h3>
+                <p>Textbooks, novels, magazines</p>
+                <div class="category-overlay">
+                    <span>Explore Books</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products Section -->
+{% if featured_products %}
+<section class="featured-section">
+    <div class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">Featured Products</h2>
+            <p class="section-subtitle">Popular items available for rent</p>
+        </div>
+        
+        <div class="products-grid">
+            {% for product in featured_products %}
+                <div class="product-card">
+                    <div class="product-image">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                            <div class="product-placeholder">
+                                <i class="fas fa-image"></i>
+                            </div>
+                        {% endif %}
+                        <div class="product-category">
+                            <span class="category-badge">{{ product.get_category_display }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="product-info">
+                        <h3 class="product-name">{{ product.name }}</h3>
+                        <p class="product-description">{{ product.description|truncatewords:10 }}</p>
+                        
+                        <div class="product-details">
+                            <div class="product-price">
+                                <span class="price-amount">₹{{ product.price_per_day }}</span>
+                                <span class="price-period">/day</span>
+                            </div>
+                            
+                            <div class="product-owner">
+                                <i class="fas fa-user"></i>
+                                <span>{{ product.owner.first_name|default:product.owner.username }}</span>
+                            </div>
+                        </div>
+                        
+                        {% if user.is_authenticated and user.userprofile.user_type != 'owner' %}
+                            <a href="{% url 'rent_product' product.id %}" class="btn btn-primary product-btn">
+                                <i class="fas fa-shopping-cart"></i> Rent Now
+                            </a>
+                        {% elif user.is_authenticated %}
+                            <button class="btn btn-disabled product-btn" disabled>
+                                <i class="fas fa-user-check"></i> Your Product
+                            </button>
+                        {% else %}
+                            <a href="{% url 'login' %}" class="btn btn-primary product-btn">
+                                <i class="fas fa-sign-in-alt"></i> Login to Rent
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        {% if user.is_authenticated %}
+            <div class="section-footer">
+                <a href="{% url 'renter_dashboard' %}" class="btn btn-outline">
+                    <i class="fas fa-eye"></i> View All Products
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endif %}
+
+<!-- How It Works Section -->
+<section class="how-it-works">
+    <div class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">How Rentz Works</h2>
+            <p class="section-subtitle">Get started in 3 simple steps</p>
+        </div>
+        
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h3>Sign Up</h3>
+                <p>Create your account as an Owner (to rent out items) or Renter (to rent items)</p>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3>Browse & Choose</h3>
+                <p>Browse available products, filter by category, and find exactly what you need</p>
+            </div>
+            
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <h3>Rent & Enjoy</h3>
+                <p>Complete the booking with our secure payment system and enjoy your rental</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="cta-section">
+    <div class="cta-content">
+        <h2>Ready to Start Renting?</h2>
+        <p>Join thousands of users who are already saving money by renting instead of buying</p>
+        
+        {% if not user.is_authenticated %}
+            <div class="cta-buttons">
+                <a href="{% url 'signup' %}" class="btn btn-primary cta-btn">
+                    <i class="fas fa-rocket"></i> Join Rentz Now
+                </a>
+                <span class="cta-separator">or</span>
+                <a href="{% url 'login' %}" class="btn btn-outline cta-btn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+            </div>
+        {% else %}
+            <div class="cta-buttons">
+                {% if user.userprofile.user_type == 'owner' %}
+                    <a href="{% url 'add_product' %}" class="btn btn-primary cta-btn">
+                        <i class="fas fa-plus"></i> List Your First Product
+                    </a>
+                {% else %}
+                    <a href="{% url 'renter_dashboard' %}" class="btn btn-primary cta-btn">
+                        <i class="fas fa-search"></i> Start Browsing
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Add click handlers for category cards
+document.querySelectorAll('.category-card').forEach(card => {
+    card.addEventListener('click', function() {
+        const category = this.dataset.category;
+        if (category) {
+            {% if user.is_authenticated %}
+                window.location.href = `{% url 'renter_dashboard' %}?category=${category}`;
+            {% else %}
+                window.location.href = `{% url 'login' %}`;
+            {% endif %}
+        }
+    });
+});
+
+// Add animation on scroll
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, observerOptions);
+
+// Observe all sections
+document.querySelectorAll('section').forEach(section => {
+    section.style.opacity = '0';
+    section.style.transform = 'translateY(30px)';
+    section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(section);
+});
+</script>
+{% endblock %}

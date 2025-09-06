@@ -1,0 +1,352 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Browse Products - Rentz{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <div class="header-content">
+            <div class="welcome-section">
+                <h1>
+                    <i class="fas fa-search"></i>
+                    Find Your Perfect Rental
+                </h1>
+                <p>Discover amazing products available for rent</p>
+            </div>
+            
+            <div class="header-stats">
+                <div class="stat-item">
+                    <span class="stat-number">{{ products.count }}</span>
+                    <span class="stat-label">Products Available</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">₹{{ total_spent }}</span>
+                    <span class="stat-label">Total Spent</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Search and Filters -->
+    <div class="filters-section">
+        <div class="filters-container">
+            <!-- Search Bar -->
+            <form method="GET" class="search-form">
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input 
+                        type="text" 
+                        name="search" 
+                        class="search-input" 
+                        placeholder="Search products..."
+                        value="{{ search_query|default:'' }}"
+                    >
+                    <button type="submit" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <!-- Hidden field to preserve category filter -->
+                {% if selected_category %}
+                    <input type="hidden" name="category" value="{{ selected_category }}">
+                {% endif %}
+            </form>
+            
+            <!-- Category Filters -->
+            <div class="category-filters">
+                <a href="{% url 'renter_dashboard' %}" 
+                   class="category-filter {% if not selected_category %}active{% endif %}">
+                    <i class="fas fa-th"></i> All Categories
+                </a>
+                
+                {% for category_code, category_name in categories %}
+                    <a href="?category={{ category_code }}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                       class="category-filter {% if selected_category == category_code %}active{% endif %}">
+                        {% if category_code == 'vehicle' %}
+                            <i class="fas fa-car"></i>
+                        {% elif category_code == 'furniture' %}
+                            <i class="fas fa-couch"></i>
+                        {% elif category_code == 'electronics' %}
+                            <i class="fas fa-laptop"></i>
+                        {% elif category_code == 'gadgets' %}
+                            <i class="fas fa-gamepad"></i>
+                        {% elif category_code == 'sports' %}
+                            <i class="fas fa-hiking-boot"></i>
+                        {% elif category_code == 'books' %}
+                            <i class="fas fa-book"></i>
+                        {% else %}
+                            <i class="fas fa-tag"></i>
+                        {% endif %}
+                        {{ category_name }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Products Grid -->
+    <div class="dashboard-content">
+        {% if products %}
+            <div class="products-section">
+                <div class="section-header">
+                    <h2>
+                        {% if selected_category %}
+                            <i class="fas fa-filter"></i>
+                            {{ selected_category|capfirst }} Products
+                        {% elif search_query %}
+                            <i class="fas fa-search"></i>
+                            Search Results for "{{ search_query }}"
+                        {% else %}
+                            <i class="fas fa-boxes"></i>
+                            All Available Products
+                        {% endif %}
+                    </h2>
+                    <div class="results-count">
+                        {{ products.count }} product{{ products.count|pluralize }} found
+                    </div>
+                </div>
+                
+                <div class="products-grid">
+                    {% for product in products %}
+                        <div class="product-card renter-product">
+                            <div class="product-image">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                                {% else %}
+                                    <div class="product-placeholder">
+                                        {% if product.category == 'vehicle' %}
+                                            <i class="fas fa-car"></i>
+                                        {% elif product.category == 'furniture' %}
+                                            <i class="fas fa-couch"></i>
+                                        {% elif product.category == 'electronics' %}
+                                            <i class="fas fa-laptop"></i>
+                                        {% elif product.category == 'gadgets' %}
+                                            <i class="fas fa-gamepad"></i>
+                                        {% elif product.category == 'sports' %}
+                                            <i class="fas fa-hiking-boot"></i>
+                                        {% elif product.category == 'books' %}
+                                            <i class="fas fa-book"></i>
+                                        {% else %}
+                                            <i class="fas fa-box"></i>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="product-overlay">
+                                    <button class="btn btn-primary quick-rent" onclick="quickRent({{ product.id }})">
+                                        <i class="fas fa-bolt"></i> Quick Rent
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="product-info">
+                                <div class="product-header">
+                                    <h3 class="product-name">{{ product.name }}</h3>
+                                    <span class="product-category">
+                                        {{ product.get_category_display }}
+                                    </span>
+                                </div>
+                                
+                                <p class="product-description">
+                                    {{ product.description|truncatewords:12 }}
+                                </p>
+                                
+                                <div class="product-details">
+                                    <div class="product-price">
+                                        <span class="price-amount">₹{{ product.price_per_day }}</span>
+                                        <span class="price-period">/day</span>
+                                    </div>
+                                    
+                                    <div class="product-owner">
+                                        <i class="fas fa-user"></i>
+                                        <span>{{ product.owner.first_name|default:product.owner.username }}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="product-meta">
+                                    <span class="meta-item">
+                                        <i class="fas fa-calendar-plus"></i>
+                                        Listed {{ product.days_listed }} days ago
+                                    </span>
+                                </div>
+                                
+                                <div class="product-actions">
+                                    <a href="{% url 'rent_product' product.id %}" class="btn btn-primary product-btn">
+                                        <i class="fas fa-shopping-cart"></i> Rent Now
+                                    </a>
+                                    <button class="btn btn-outline product-btn" onclick="viewDetails({{ product.id }})">
+                                        <i class="fas fa-eye"></i> Details
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                {% if search_query or selected_category %}
+                    <div class="empty-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>No Products Found</h3>
+                    <p>
+                        {% if search_query %}
+                            No products match your search "{{ search_query }}"
+                        {% else %}
+                            No products available in {{ selected_category|capfirst }} category
+                        {% endif %}
+                    </p>
+                    <div class="empty-actions">
+                        <a href="{% url 'renter_dashboard' %}" class="btn btn-primary">
+                            <i class="fas fa-th"></i> Browse All Products
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="empty-icon">
+                        <i class="fas fa-box-open"></i>
+                    </div>
+                    <h3>No Products Available</h3>
+                    <p>There are currently no products available for rent. Check back soon!</p>
+                    <div class="empty-actions">
+                        <button class="btn btn-primary" onclick="location.reload()">
+                            <i class="fas fa-refresh"></i> Refresh
+                        </button>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+        
+        <!-- Rental History Section -->
+        {% if user_rentals %}
+        <div class="dashboard-section">
+            <div class="section-header">
+                <h2>
+                    <i class="fas fa-history"></i>
+                    Your Recent Rentals
+                </h2>
+                <a href="{% url 'rental_history' %}" class="btn btn-sm btn-outline">
+                    View All History
+                </a>
+            </div>
+            
+            <div class="rental-cards">
+                {% for rental in user_rentals %}
+                    <div class="rental-card">
+                        <div class="rental-image">
+                            {% if rental.product.image %}
+                                <img src="{{ rental.product.image.url }}" alt="{{ rental.product.name }}">
+                            {% else %}
+                                <div class="rental-placeholder">
+                                    <i class="fas fa-image"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="rental-info">
+                            <h4>{{ rental.product.name }}</h4>
+                            <p class="rental-details">
+                                <i class="fas fa-calendar"></i>
+                                {{ rental.start_date }} - {{ rental.end_date }}
+                                <span class="rental-duration">({{ rental.days_rented }} days)</span>
+                            </p>
+                            <p class="rental-cost">
+                                <i class="fas fa-rupee-sign"></i>
+                                ₹{{ rental.total_cost }}
+                            </p>
+                        </div>
+                        
+                        <div class="rental-status">
+                            <span class="status-badge {{ rental.status }}">
+                                {{ rental.get_status_display }}
+                            </span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Quick rent function
+function quickRent(productId) {
+    // For now, redirect to rent page
+    window.location.href = `/rent/${productId}/`;
+}
+
+// View product details
+function viewDetails(productId) {
+    // In a real app, this would open a modal with product details
+    alert('Product details modal will be implemented in the next version!');
+}
+
+// Search form enhancements
+document.querySelector('.search-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        this.closest('form').submit();
+    }
+});
+
+// Add loading state to search
+document.querySelector('.search-form').addEventListener('submit', function() {
+    const searchBtn = document.querySelector('.search-btn');
+    searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+});
+
+// Product card hover effects
+document.querySelectorAll('.product-card').forEach(card => {
+    card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+        this.style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+        this.style.boxShadow = '';
+    });
+});
+
+// Animate products on scroll
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, observerOptions);
+
+// Observe all product cards
+document.querySelectorAll('.product-card').forEach(card => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(20px)';
+    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(card);
+});
+
+// Auto-clear search after no activity
+let searchTimeout;
+document.querySelector('.search-input').addEventListener('input', function() {
+    clearTimeout(searchTimeout);
+    const input = this;
+    
+    searchTimeout = setTimeout(() => {
+        if (input.value.length > 2) {
+            // Auto-submit search after 1 second of no typing
+            // input.closest('form').submit();
+        }
+    }, 1000);
+});
+</script>
+{% endblock %}

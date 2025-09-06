@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Rentz - Rent Anything, Anytime{% endblock %}</title>
+    
+    <!-- Load static files -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Additional head content -->
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- Logo -->
+            <div class="nav-logo">
+                <a href="{% url 'home' %}" class="logo-link">
+                    <i class="fas fa-home"></i>
+                    <span>Rentz</span>
+                </a>
+            </div>
+            
+            <!-- Navigation Menu -->
+            <div class="nav-menu" id="navMenu">
+                <a href="{% url 'home' %}" class="nav-link">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="{% url 'about' %}" class="nav-link">
+                    <i class="fas fa-info-circle"></i> About
+                </a>
+                <a href="{% url 'contact' %}" class="nav-link">
+                    <i class="fas fa-envelope"></i> Contact
+                </a>
+                
+                {% if user.is_authenticated %}
+                    <!-- Authenticated user menu -->
+                    <div class="user-menu">
+                        <span class="welcome-text">Welcome, {{ user.first_name|default:user.username }}!</span>
+                        
+                        {% if user.userprofile.user_type == 'owner' %}
+                            <a href="{% url 'owner_dashboard' %}" class="nav-link dashboard-link">
+                                <i class="fas fa-tachometer-alt"></i> Owner Dashboard
+                            </a>
+                        {% else %}
+                            <a href="{% url 'renter_dashboard' %}" class="nav-link dashboard-link">
+                                <i class="fas fa-search"></i> Browse Products
+                            </a>
+                        {% endif %}
+                        
+                        <a href="{% url 'logout' %}" class="nav-link logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                {% else %}
+                    <!-- Anonymous user menu -->
+                    <a href="{% url 'login' %}" class="nav-link login-btn">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                    <a href="{% url 'signup' %}" class="nav-link signup-btn">
+                        <i class="fas fa-user-plus"></i> Sign Up
+                    </a>
+                {% endif %}
+            </div>
+            
+            <!-- Mobile menu toggle -->
+            <div class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Display Django messages -->
+        {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        <i class="fas fa-info-circle"></i>
+                        {{ message }}
+                        <button class="alert-close" onclick="this.parentElement.style.display='none'">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <!-- Page-specific content -->
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <!-- Company Info -->
+                <div class="footer-section">
+                    <h3><i class="fas fa-home"></i> Rentz</h3>
+                    <p>Your trusted marketplace for renting anything you need. From vehicles to gadgets, find it all here!</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="{% url 'about' %}"><i class="fas fa-info-circle"></i> About Us</a></li>
+                        <li><a href="{% url 'contact' %}"><i class="fas fa-envelope"></i> Contact</a></li>
+                        <li><a href="#"><i class="fas fa-question-circle"></i> FAQ</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Categories -->
+                <div class="footer-section">
+                    <h4>Categories</h4>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-car"></i> Vehicles</a></li>
+                        <li><a href="#"><i class="fas fa-couch"></i> Furniture</a></li>
+                        <li><a href="#"><i class="fas fa-laptop"></i> Electronics</a></li>
+                        <li><a href="#"><i class="fas fa-gamepad"></i> Gadgets</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact Info -->
+                <div class="footer-section">
+                    <h4>Contact Us</h4>
+                    <div class="contact-info">
+                        <p><i class="fas fa-phone"></i> +91 9876543210</p>
+                        <p><i class="fas fa-envelope"></i> support@rentz.com</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Mumbai, India</p>
+                        <p><i class="fas fa-clock"></i> 24/7 Support</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Copyright -->
+            <div class="footer-bottom">
+                <p>&copy; 2024 Rentz. All rights reserved. | Made with ❤️ in India</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

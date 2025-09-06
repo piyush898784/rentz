@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login - Rentz{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="auth-icon">
+                <i class="fas fa-sign-in-alt"></i>
+            </div>
+            <h2>Welcome Back!</h2>
+            <p>Sign in to your Rentz account</p>
+        </div>
+        
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+            
+            <!-- Display form errors -->
+            {% if form.errors %}
+                <div class="form-errors">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <!-- Username Field -->
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <i class="fas fa-user input-icon"></i>
+                    <input 
+                        type="text" 
+                        name="username" 
+                        class="form-input" 
+                        placeholder="Username"
+                        value="{{ form.username.value|default:'' }}"
+                        required
+                    >
+                </div>
+            </div>
+            
+            <!-- Password Field -->
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input 
+                        type="password" 
+                        name="password" 
+                        class="form-input" 
+                        placeholder="Password"
+                        required
+                    >
+                    <button type="button" class="password-toggle" id="passwordToggle">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Remember Me -->
+            <div class="form-options">
+                <label class="checkbox-wrapper">
+                    <input type="checkbox" name="remember_me">
+                    <span class="checkmark"></span>
+                    Remember me
+                </label>
+                
+                <a href="#" class="forgot-password">
+                    Forgot Password?
+                </a>
+            </div>
+            
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary auth-submit">
+                <i class="fas fa-sign-in-alt"></i>
+                Sign In
+            </button>
+        </form>
+        
+        <!-- Alternative Actions -->
+        <div class="auth-footer">
+            <div class="auth-divider">
+                <span>Don't have an account?</span>
+            </div>
+            
+            <a href="{% url 'signup' %}" class="btn btn-outline auth-link">
+                <i class="fas fa-user-plus"></i>
+                Create Account
+            </a>
+            
+            <!-- Demo Accounts -->
+            <div class="demo-accounts">
+                <p class="demo-title">Try Demo Accounts:</p>
+                <div class="demo-buttons">
+                    <button type="button" class="demo-btn" onclick="fillDemoAccount('owner')">
+                        <i class="fas fa-home"></i> Demo Owner
+                    </button>
+                    <button type="button" class="demo-btn" onclick="fillDemoAccount('renter')">
+                        <i class="fas fa-user"></i> Demo Renter
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Background Animation -->
+    <div class="auth-background">
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Password visibility toggle
+document.getElementById('passwordToggle').addEventListener('click', function() {
+    const passwordInput = document.querySelector('input[name="password"]');
+    const icon = this.querySelector('i');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+});
+
+// Demo account function
+function fillDemoAccount(type) {
+    const usernameInput = document.querySelector('input[name="username"]');
+    const passwordInput = document.querySelector('input[name="password"]');
+    
+    if (type === 'owner') {
+        usernameInput.value = 'demo_owner';
+        passwordInput.value = 'demo123';
+    } else {
+        usernameInput.value = 'demo_renter';
+        passwordInput.value = 'demo123';
+    }
+    
+    // Add visual feedback
+    usernameInput.style.background = 'rgba(46, 204, 113, 0.1)';
+    passwordInput.style.background = 'rgba(46, 204, 113, 0.1)';
+    
+    setTimeout(() => {
+        usernameInput.style.background = '';
+        passwordInput.style.background = '';
+    }, 2000);
+}
+
+// Form animation on load
+document.addEventListener('DOMContentLoaded', function() {
+    const authCard = document.querySelector('.auth-card');
+    authCard.style.opacity = '0';
+    authCard.style.transform = 'translateY(30px)';
+    
+    setTimeout(() => {
+        authCard.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        authCard.style.opacity = '1';
+        authCard.style.transform = 'translateY(0)';
+    }, 100);
+});
+
+// Enhanced form validation
+document.querySelector('.auth-form').addEventListener('submit', function(e) {
+    const username = document.querySelector('input[name="username"]').value.trim();
+    const password = document.querySelector('input[name="password"]').value;
+    
+    if (!username) {
+        e.preventDefault();
+        showError('Please enter your username');
+        return;
+    }
+    
+    if (!password) {
+        e.preventDefault();
+        showError('Please enter your password');
+        return;
+    }
+    
+    // Show loading state
+    const submitBtn = document.querySelector('.auth-submit');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
+    submitBtn.disabled = true;
+    
+    // Re-enable button after 3 seconds (in case of errors)
+    setTimeout(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }, 3000);
+});
+
+function showError(message) {
+    // Create or update error display
+    let errorDiv = document.querySelector('.form-errors');
+    if (!errorDiv) {
+        errorDiv = document.createElement('div');
+        errorDiv.className = 'form-errors';
+        document.querySelector('.auth-form').insertBefore(errorDiv, document.querySelector('.form-group'));
+    }
+    
+    errorDiv.innerHTML = `
+        <div class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            ${message}
+        </div>
+    `;
+}
+</script>
+{% endblock %}
